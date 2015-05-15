@@ -18,7 +18,7 @@ double lambda = pow(double(10), -4);
  * soft matting to refine transmission image and I set the size of window is 3X3
  */
 
-static int solve_laplacian_matrix(const Mat &src, const Mat &transmission, Mat &op_transmission, int k_size)
+int solve_laplacian_matrix(const Mat &src, const Mat &transmission, Mat &op_transmission, int k_size)
 {
     ublas::matrix<double, ublas::column_major> laplacian_matrix(src.rows * src.cols, src.rows * src.cols);
 
@@ -120,6 +120,8 @@ static int solve_laplacian_matrix(const Mat &src, const Mat &transmission, Mat &
             op_transmission.at<uchar>(i, j) = b(i * op_transmission.cols + j);
         }
     }
+
+    return 0;
 }
 
 #endif
