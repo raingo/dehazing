@@ -1,0 +1,3 @@
+[submodule "guided-filter"]
+	path = guided-filter
+	url = git@github.com:atilimcetin/guided-filter.git

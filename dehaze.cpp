@@ -9,6 +9,7 @@ using namespace cv;
 #include "include/estimate_transmission.hpp"
 #include "include/soft_matting.hpp"
 #include "include/dehazing.hpp"
+#include "guided-filter/guidedfilter.h"
 
 int main(int argc, char *argv[])
 {
@@ -16,8 +17,8 @@ int main(int argc, char *argv[])
 
     if (argc == 2) {
         haze_img = imread(argv[1], CV_LOAD_IMAGE_COLOR);
-        namedWindow("haze image", CV_WINDOW_AUTOSIZE);
-        imshow("haze image", haze_img);
+        ////namedWindow("haze image", CV_WINDOW_AUTOSIZE);
+        ////imshow("haze image", haze_img);
     } else {
         cout << "Usage: ./dehaze filename" << endl;
         return -1;
@@ -40,42 +41,37 @@ int main(int argc, char *argv[])
     // get transmission diagram
     estimate_transmission(dark_channel, transmission, A);
 
+    int r = 60;
+    double eps = 1e-6;
+    eps *= 255 * 255;
+
     // refine tansmission image
-    solve_laplacian_matrix(haze_img, transmission, op_transmission, 3);
+    op_transmission = guidedFilter(haze_img, transmission, r, eps);
+    //solve_laplacian_matrix(haze_img, transmission, op_transmission, 3);
 
     // get haze free image
     dehazing(haze_img, op_transmission, dehaze_img, A);
 
-    namedWindow("haze image", CV_WINDOW_AUTOSIZE);
-    imshow("haze image", haze_img);
+    ////namedWindow("haze image", CV_WINDOW_AUTOSIZE);
+    ////imshow("haze image", haze_img);
 
-    namedWindow("dark channel", CV_WINDOW_AUTOSIZE);
-    imshow("dark channel", dark_channel);
-    imwrite("result/dark_channel.png", dark_channel);
+    ////namedWindow("dark channel", CV_WINDOW_AUTOSIZE);
+    //imshow("dark channel", dark_channel);
+    //imwrite("result/dark_channel.png", dark_channel);
 
-    namedWindow("transmission image", CV_WINDOW_AUTOSIZE);
-    imshow("transmission image", transmission);
+    //namedWindow("transmission image", CV_WINDOW_AUTOSIZE);
+    //imshow("transmission image", transmission);
     imwrite("result/t.png", transmission);
 
-    namedWindow("refine transmission image", CV_WINDOW_AUTOSIZE);
-    imshow("refine transmission image", op_transmission);
+    //namedWindow("refine transmission image", CV_WINDOW_AUTOSIZE);
+    //imshow("refine transmission image", op_transmission);
     imwrite("result/refine_t.png", op_transmission);
 
-    namedWindow("haze free image", CV_WINDOW_AUTOSIZE);
-    imshow("haze free image", dehaze_img);
+    //namedWindow("haze free image", CV_WINDOW_AUTOSIZE);
+    //imshow("haze free image", dehaze_img);
     imwrite("result/dehaze.png", dehaze_img);
-    
-    waitKey();
+
+    //waitKey();
 
     return 0;
 }
-
-
-
-
-
-
-
-
-
-

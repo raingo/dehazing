@@ -12,3 +12,10 @@ The result you can see at `result/` folder. `refine_t.png` represents the refine
 [3]:http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=4359322
 
 
+Refine transmission using Guided Filter
+======================
+Able to deal with large pictures with guidedfilter.
+
+# git clone --recursive
+# make
+# ./dehaze ./images/9.bmp

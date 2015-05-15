@@ -23,9 +23,9 @@ static int solve_laplacian_matrix(const Mat &src, const Mat &transmission, Mat &
     ublas::matrix<double, ublas::column_major> laplacian_matrix(src.rows * src.cols, src.rows * src.cols);
 
     int k_center = (k_size - 1) / 2;
-    
+
     // get laplacian matrix
-    
+
     for (int i = k_center; i < src.rows - k_center; i++) {
         for (int j = k_center; j < src.cols - k_center; j++) {
             Mat local_win = src.colRange(j-k_center, j+k_center+1).rowRange(i-k_center, i+k_center+1);
@@ -33,7 +33,7 @@ static int solve_laplacian_matrix(const Mat &src, const Mat &transmission, Mat &
             Scalar mu = mean(local_win);
 
             Mat cov_matrix = Mat::zeros((Size(k_size, k_size)), CV_64FC1);
-            
+
             for (int a = 0; a < local_win.rows; a++) {
                 for (int b = 0; b < local_win.cols; b++) {
                     cov_matrix.at<double>(0, 0) += (local_win.at<Vec3b>(a, b)[0] - mu.val[0]) * (local_win.at<Vec3b>(a, b)[0] - mu.val[0]);
@@ -44,7 +44,7 @@ static int solve_laplacian_matrix(const Mat &src, const Mat &transmission, Mat &
                     cov_matrix.at<double>(2, 2) += (local_win.at<Vec3b>(a, b)[2] - mu.val[2]) * (local_win.at<Vec3b>(a, b)[2] - mu.val[2]);
                 }
             }
-            
+
             cov_matrix.at<double>(0, 0) = (cov_matrix.at<double>(0, 0) + eps) / (k_size * k_size);
             cov_matrix.at<double>(0, 1) /= k_size * k_size;
             cov_matrix.at<double>(0, 2) /= k_size * k_size;
@@ -54,7 +54,7 @@ static int solve_laplacian_matrix(const Mat &src, const Mat &transmission, Mat &
             cov_matrix.at<double>(2, 0) = cov_matrix.at<double>(0, 2);
             cov_matrix.at<double>(2, 1) = cov_matrix.at<double>(1, 2);
             cov_matrix.at<double>(2, 2) = (cov_matrix.at<double>(2, 2) + eps) / (k_size * k_size);
-            
+
             Mat inv_cov_matrix = cov_matrix.inv(DECOMP_SVD);
 
             for (int a = 0; a < local_win.rows; a++) {
@@ -102,7 +102,7 @@ static int solve_laplacian_matrix(const Mat &src, const Mat &transmission, Mat &
 
     for (unsigned i = 0; i < laplacian_matrix.size1(); i++) {
         for (unsigned j = 0; j < laplacian_matrix.size2(); j++) {
-            if (i == j) 
+            if (i == j)
                 laplacian_matrix(i, j) += lambda;
         }
     }
@@ -123,8 +123,3 @@ static int solve_laplacian_matrix(const Mat &src, const Mat &transmission, Mat &
 }
 
 #endif
-
-
-
-
-
