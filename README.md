@@ -16,6 +16,6 @@ Refine transmission using Guided Filter
 ======================
 Able to deal with large pictures with guidedfilter.
 
-# git clone --recursive
-# make
-# ./dehaze ./images/9.bmp
+* git clone --recursive
+* make
+* ./dehaze ./images/9.bmp
