@@ -16,14 +16,14 @@ static int estimate_transmission(const Mat &src, Mat &dst, Scalar A)
     AL = AL >= A.val[2] ? AL : A.val[2];
 
     uchar pixel;
-    
+
     for (int i = 0; i < src.rows; i++) {
         for (int j = 0; j < src.cols; j++) {
             pixel = src.at<uchar>(i, j);
             dst.at<uchar>(i, j) = (1 - w * pixel / AL) * 255;
         }
     }
-    
+
     return 1;
 }
 

@@ -28,15 +28,18 @@ int main(int argc, char *argv[])
     Mat transmission = Mat::zeros(haze_img.size(), CV_8UC1);
     Mat op_transmission = Mat::zeros(haze_img.size(), CV_8UC1);
     Mat dehaze_img = Mat::zeros(haze_img.size(), haze_img.type());
-    vector<Mat> layers;
-
-    split(haze_img, layers);
-
-    // atmospheric light A
-    Scalar A = estimate_AL(layers[0], layers[1], layers[2]);
 
     // get dark channel of hazy image
     get_dark_channel(haze_img, dark_channel);
+
+    // atmospheric light A
+    vector<Mat> layers;
+    split(haze_img, layers);
+#if 1
+    Scalar A = estimate_AL(layers[0], layers[1], layers[2]);
+#else
+    Scalar A = estimate_AL_v2(layers[0], layers[1], layers[2], dark_channel);
+#endif
 
     // get transmission diagram
     estimate_transmission(dark_channel, transmission, A);
